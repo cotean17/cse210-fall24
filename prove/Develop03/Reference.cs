@@ -1,10 +1,10 @@
 using System;
 
-class Reference
+class Ref
 {
     private string _book, _chapter, _verse;
 
-    public Reference (string book, string chapter, string verse)
+    public Ref (string book, string chapter, string verse)
     {
         _book = book;
         _chapter  = chapter;

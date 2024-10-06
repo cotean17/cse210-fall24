@@ -4,7 +4,7 @@ class ScriptureMemorizer
 {
     private Scripture _scripture;
     private List<string> _scriptureTextList;
-    private int _totalWordsRemoved = 0;
+    private int _tWordsRemoved = 0;
 
     public ScriptureMemorizer(Scripture scripture)
     {
@@ -30,9 +30,9 @@ class ScriptureMemorizer
             {
                 _scriptureTextList[rndIndex] = new string('_', _scriptureTextList[rndIndex].Length);
                 wordsRemoved++;
-                _totalWordsRemoved++;
+                _tWordsRemoved++;
 
-                if ((_scriptureTextList.Count() - numWordsToRemove) <= _totalWordsRemoved && _totalWordsRemoved < (_scriptureTextList.Count() + 1))
+                if ((_scriptureTextList.Count() - numWordsToRemove) <= _tWordsRemoved && _tWordsRemoved < (_scriptureTextList.Count() + 1))
                 {
                     wordsRemoved = 3;
                 }
