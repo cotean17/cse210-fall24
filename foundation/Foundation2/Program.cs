@@ -1,98 +1,158 @@
 using System;
 using System.Collections.Generic;
 
-public class Order
-{
-    private int orderId;
-    private Customer customer;
-    private List<string> items;
-    private decimal totalPrice;
-    private string status;
-
-    public Order(int orderId, Customer customer)
-    {
-        this.orderId = orderId;
-        this.customer = customer;
-        this.items = new List<string>();
-        this.totalPrice = 0.0m;
-        this.status = "Pending";
-    }
-
-    public void AddItem(string item, decimal price)
-    {
-        items.Add(item);
-        totalPrice += price;
-    }
-
-    public decimal CalculateTotal()
-    {
-        return totalPrice;
-    }
-
-    public void UpdateStatus(string newStatus)
-    {
-        status = newStatus;
-    }
-
-    public int GetOrderId()
-    {
-        return orderId;
-    }
-}
-
-public class Customer
-{
-    private int customerId;
-    private string name;
-    private string address;
-    private string paymentInfo; // Ideally, this should be encrypted or handled securely
-
-    public Customer(int customerId, string name, string address, string paymentInfo)
-    {
-        this.customerId = customerId;
-        this.name = name;
-        this.address = address;
-        this.paymentInfo = paymentInfo;
-    }
-
-    public void UpdateAddress(string newAddress)
-    {
-        address = newAddress;
-    }
-
-    public void ProcessPayment(decimal amount)
-    {
-        // Logic to process payment (mocked for simplicity)
-        Console.WriteLine($"Processing payment of {amount:C} for {name}.");
-    }
-}
-
 public class Product
 {
     private int productId;
     private string name;
     private decimal price;
-    private int stockQuantity;
+    private int quantity;
 
-    public Product(int productId, string name, decimal price, int stockQuantity)
+    public Product(int productId, string name, decimal price, int quantity)
     {
         this.productId = productId;
         this.name = name;
         this.price = price;
-        this.stockQuantity = stockQuantity;
+        this.quantity = quantity;
     }
 
-    public void UpdateStock(int quantity)
+    public decimal TotalCost()
     {
-        stockQuantity = quantity;
+        return price * quantity;
     }
 
-    public Dictionary<string, object> GetDetails()
+    public int ProductId => productId;
+    public string Name => name;
+}
+
+public class Address
+{
+    private string streetAddress;
+    private string city;
+    private string state;
+    private string country;
+
+    public Address(string streetAddress, string city, string state, string country)
     {
-        return new Dictionary<string, object>
-        {
-            { "Name", name },
-            { "Price", price }
-        };
+        this.streetAddress = streetAddress;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+    }
+
+    public bool IsInUSA()
+    {
+        return country.Equals("USA", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public override string ToString()
+    {
+        return $"{streetAddress}\n{city}, {state}\n{country}";
     }
 }
+
+public class Customer
+{
+    private string name;
+    private Address address;
+
+    public Customer(string name, Address address)
+    {
+        this.name = name;
+        this.address = address;
+    }
+
+    public bool LivesInUSA()
+    {
+        return address.IsInUSA();
+    }
+
+    public string Name => name;
+    public Address Address => address;
+}
+
+public class Order
+{
+    private List<Product> products;
+    private Customer customer;
+
+    public Order(Customer customer)
+    {
+        this.customer = customer;
+        this.products = new List<Product>();
+    }
+
+    public void AddProduct(Product product)
+    {
+        products.Add(product);
+    }
+
+    public decimal CalculateTotalCost()
+    {
+        decimal shippingCost = customer.LivesInUSA() ? 5.00m : 35.00m;
+        decimal totalProductCost = 0.0m;
+
+        foreach (var product in products)
+        {
+            totalProductCost += product.TotalCost();
+        }
+
+        return totalProductCost + shippingCost;
+    }
+
+    public string GetPackingLabel()
+    {
+        var packingLabel = "Packing Label:\n";
+        foreach (var product in products)
+        {
+            packingLabel += $"{product.Name} (ID: {product.ProductId})\n";
+        }
+        return packingLabel;
+    }
+
+    public string GetShippingLabel()
+    {
+        return $"Shipping Label:\n{customer.Name}\n{customer.Address}";
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Create address objects
+        Address address1 = new Address("123 Maple St", "Springfield", "IL", "USA");
+        Address address2 = new Address("456 Oak Ave", "Toronto", "ON", "Canada");
+
+        // Create customer objects
+        Customer customer1 = new Customer("Jane Doe", address1);
+        Customer customer2 = new Customer("John Smith", address2);
+
+        // Create order objects
+        Order order1 = new Order(customer1);
+        Order order2 = new Order(customer2);
+
+        // Create product objects
+        Product product1 = new Product(1, "Laptop", 999.99m, 1);
+        Product product2 = new Product(2, "Mouse", 25.50m, 2);
+        Product product3 = new Product(3, "Keyboard", 49.99m, 1);
+        Product product4 = new Product(4, "Monitor", 199.99m, 1);
+
+        // Add products to orders
+        order1.AddProduct(product1);
+        order1.AddProduct(product2);
+
+        order2.AddProduct(product3);
+        order2.AddProduct(product4);
+
+        // Display order details
+        Console.WriteLine(order1.GetPackingLabel());
+        Console.WriteLine(order1.GetShippingLabel());
+        Console.WriteLine($"Total Cost: {order1.CalculateTotalCost():C}\n");
+
+        Console.WriteLine(order2.GetPackingLabel());
+        Console.WriteLine(order2.GetShippingLabel());
+        Console.WriteLine($"Total Cost: {order2.CalculateTotalCost():C}");
+    }
+}
+
