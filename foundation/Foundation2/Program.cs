@@ -102,7 +102,7 @@ public class Order
 
     public string GetPackingLabel()
     {
-        var packingLabel = "Packing Labe:\n";
+        var packingLabel = "Packing Label:\n";
         foreach (var product in products)
         {
             packingLabel += $"{product.Name} (ID: {product.ProductId})\n";
@@ -155,4 +155,3 @@ class Program
         Console.WriteLine($"Total Cost: {order2.CalculateTotalCost():C}");
     }
 }
-
