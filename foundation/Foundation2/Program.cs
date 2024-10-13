@@ -102,7 +102,7 @@ public class Order
 
     public string GetPackingLabel()
     {
-        var packingLabel = "Packing Label:\n";
+        var packingLabel = "Packing Labe:\n";
         foreach (var product in products)
         {
             packingLabel += $"{product.Name} (ID: {product.ProductId})\n";
