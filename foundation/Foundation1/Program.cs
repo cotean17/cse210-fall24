@@ -59,8 +59,15 @@ class Program
         // Add comments to videos
         videos[0].AddComment("Dave", "Great video!");
         videos[0].AddComment("Eve", "Very helpful, thanks!");
+        videos[0].AddComment("Frank", "Looking forward to more!");
+        
         videos[1].AddComment("Grace", "Excellent explanation!");
-        videos[2].AddComment("Ivan", "Awesome content!");
+        videos[1].AddComment("Heidi", "I learned a lot!");
+        videos[1].AddComment("Ivan", "Thanks for the insights!");
+
+        videos[2].AddComment("Judy", "Awesome content!");
+        videos[2].AddComment("Mallory", "Very informative.");
+        videos[2].AddComment("Oscar", "Can't wait to apply this!");
 
         // Display video information and comments
         foreach (var video in videos)
